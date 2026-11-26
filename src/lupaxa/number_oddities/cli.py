@@ -89,11 +89,7 @@ def _dispatch(args: list[str]) -> int:
         return 0
     if command == "explain":
         name = _one(payload, "a property name is required")
-        write_stdout(
-            render_explanation(
-                _named(name), output_format=output_format, ascii_math=ascii_math, colour=colour
-            )
-        )
+        write_stdout(render_explanation(_named(name), output_format=output_format, ascii_math=ascii_math, colour=colour))
         return 0
     if command == "inspect":
         number = _integer(_one(payload, "a number is required"))
@@ -156,11 +152,7 @@ def _compare(payload: list[str], output_format: str, ascii_math: bool, colour: b
     for number in numbers:
         _facts, matches, _skipped = inspect_number(number)
         rows.append([item.ident for item, _facts in matches])
-    write_stdout(
-        render_compare(
-            numbers, rows, output_format=output_format, ascii_math=ascii_math, colour=colour
-        )
-    )
+    write_stdout(render_compare(numbers, rows, output_format=output_format, ascii_math=ascii_math, colour=colour))
     return 0
 
 
@@ -187,17 +179,14 @@ def _random(
     return 0
 
 
-def _discover(
-    start: int, end: int, prop: Property | None, seed: int | None
-) -> tuple[int | None, Property | None]:
+def _discover(start: int, end: int, prop: Property | None, seed: int | None) -> tuple[int | None, Property | None]:
     rng = Random(seed) if seed is not None else Random()
     if prop is not None:
         groups = [[prop]]
     else:
-        groups = [
-            [item for item in REGISTRY if item.ident not in {"deficient", "composite"}],
-            [item for item in REGISTRY if item.ident in {"deficient", "composite"}],
-        ]
+        common = [item for item in REGISTRY if item.ident not in {"deficient", "composite"}]
+        uncommon = [item for item in REGISTRY if item.ident in {"deficient", "composite"}]
+        groups = [common, uncommon]
     for group in groups:
         order = list(group)
         rng.shuffle(order)

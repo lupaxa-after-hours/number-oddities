@@ -265,30 +265,19 @@ def _explain_composite(facts: Facts, ascii_math: bool) -> str:
 def _explain_perfect(facts: Facts, ascii_math: bool) -> str:
     del ascii_math
     total = proper_divisor_sum(facts.number, facts.factors)
-    return (
-        f"The proper divisors of {facts.number} sum to {total}.\n\n"
-        f"{facts.number} is a perfect number."
-    )
+    return f"The proper divisors of {facts.number} sum to {total}.\n\n{facts.number} is a perfect number."
 
 
 def _explain_abundant(facts: Facts, ascii_math: bool) -> str:
     del ascii_math
     total = proper_divisor_sum(facts.number, facts.factors)
-    return (
-        f"The proper divisors of {facts.number} sum to {total}, "
-        f"which is greater than {facts.number}.\n\n"
-        f"{facts.number} is an abundant number."
-    )
+    return f"The proper divisors of {facts.number} sum to {total}, which is greater than {facts.number}.\n\n{facts.number} is an abundant number."
 
 
 def _explain_deficient(facts: Facts, ascii_math: bool) -> str:
     del ascii_math
     total = proper_divisor_sum(facts.number, facts.factors)
-    return (
-        f"The proper divisors of {facts.number} sum to {total}, "
-        f"which is less than {facts.number}.\n\n"
-        f"{facts.number} is a deficient number."
-    )
+    return f"The proper divisors of {facts.number} sum to {total}, which is less than {facts.number}.\n\n{facts.number} is a deficient number."
 
 
 def _explain_square(facts: Facts, ascii_math: bool) -> str:
@@ -315,9 +304,7 @@ def _explain_triangular(facts: Facts, ascii_math: bool) -> str:
     discriminant = square_root(8 * facts.number + 1)
     index = (discriminant - 1) // 2
     mark = "*" if ascii_math else "×"
-    return (
-        f"{index} {mark} {index + 1} / 2 = {facts.number}\n\n{facts.number} is a triangular number."
-    )
+    return f"{index} {mark} {index + 1} / 2 = {facts.number}\n\n{facts.number} is a triangular number."
 
 
 def _explain_pronic(facts: Facts, ascii_math: bool) -> str:
@@ -331,10 +318,7 @@ def _explain_fibonacci(facts: Facts, ascii_math: bool) -> str:
     square = "^2" if ascii_math else "²"
     plus = is_square(5 * facts.number * facts.number + 4)
     witness = "+ 4" if plus else "- 4"
-    return (
-        f"5 {mark} {facts.number}{square} {witness} is a perfect square.\n\n"
-        f"{facts.number} is a Fibonacci number."
-    )
+    return f"5 {mark} {facts.number}{square} {witness} is a perfect square.\n\n{facts.number} is a Fibonacci number."
 
 
 def _explain_palindromic(facts: Facts, ascii_math: bool) -> str:
@@ -346,25 +330,17 @@ def _explain_palindromic(facts: Facts, ascii_math: bool) -> str:
 def _explain_automorphic(facts: Facts, ascii_math: bool) -> str:
     square = facts.number * facts.number
     shown = _power(facts.number, 2, ascii_math=ascii_math)
-    return (
-        f"{shown} = {square}\n{square} ends with {facts.number}.\n\n{facts.number} is automorphic."
-    )
+    return f"{shown} = {square}\n{square} ends with {facts.number}.\n\n{facts.number} is automorphic."
 
 
 def _explain_harshad(facts: Facts, ascii_math: bool) -> str:
     total = sum(facts.digits)
     quotient = facts.number // total
     mark = "/" if ascii_math else "÷"
-    return (
-        f"{_join([str(digit) for digit in facts.digits])} = {total}\n"
-        f"{facts.number} {mark} {total} = {quotient}\n\n"
-        f"{facts.number} is a Harshad number."
-    )
+    return f"{_join([str(digit) for digit in facts.digits])} = {total}\n{facts.number} {mark} {total} = {quotient}\n\n{facts.number} is a Harshad number."
 
 
-def _explain_power_sum(
-    facts: Facts, ascii_math: bool, power_of: Callable[[int, int], int], title: str, article: str
-) -> str:
+def _explain_power_sum(facts: Facts, ascii_math: bool, power_of: Callable[[int, int], int], title: str, article: str) -> str:
     terms = []
     values = []
     for index, digit in enumerate(facts.digits):
@@ -404,11 +380,7 @@ def _explain_kaprekar(facts: Facts, ascii_math: bool) -> str:
     if facts.number == 1:
         return f"{shown} = 1\n0 + 1 = 1\n\n1 is a Kaprekar number."
     left, right = _kaprekar_split(facts.number, text)
-    return (
-        f"{shown} = {text}\n"
-        f"{left} + {right} = {facts.number}\n\n"
-        f"{facts.number} is a Kaprekar number."
-    )
+    return f"{shown} = {text}\n{left} + {right} = {facts.number}\n\n{facts.number} is a Kaprekar number."
 
 
 def _kaprekar_split(number: int, text: str) -> tuple[int, int]:
@@ -435,12 +407,7 @@ def _explain_smith(facts: Facts, ascii_math: bool) -> str:
     shown = _times(facts.factors, ascii_math=ascii_math)
     number_digits = _join([str(digit) for digit in facts.digits])
     factor_digits = _join([str(digit) for factor in facts.factors for digit in digits_of(factor)])
-    return (
-        f"{facts.number} = {shown}\n"
-        f"{number_digits} = {sum(facts.digits)}\n"
-        f"{factor_digits} = {sum(digit_sum(factor) for factor in facts.factors)}\n\n"
-        f"{facts.number} is a Smith number."
-    )
+    return f"{facts.number} = {shown}\n{number_digits} = {sum(facts.digits)}\n{factor_digits} = {sum(digit_sum(factor) for factor in facts.factors)}\n\n{facts.number} is a Smith number."
 
 
 REGISTRY: tuple[Property, ...] = (
@@ -795,9 +762,7 @@ def evaluate(number: int, prop: Property, *, search: bool = False) -> tuple[Stat
     return prop.check(facts), facts
 
 
-def matching(
-    number: int, *, search: bool = False
-) -> tuple[list[tuple[Property, Facts]], list[str], Facts]:
+def matching(number: int, *, search: bool = False) -> tuple[list[tuple[Property, Facts]], list[str], Facts]:
     """Return matches, skipped identifiers, and the shared factorisation."""
     shared = facts_for(number, search=search, factor=True)
     plain = facts_for(number, search=search, factor=False)

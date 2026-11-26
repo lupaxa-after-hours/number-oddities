@@ -126,10 +126,7 @@ def _explain_zuckerman(facts: Facts, ascii_math: bool) -> str:
         product *= digit
     shown = f" {mark} ".join(str(digit) for digit in facts.digits)
     divide = "/" if ascii_math else "÷"
-    return (
-        f"{shown} = {product}\n{facts.number} {divide} {product} = {facts.number // product}\n\n"
-        f"{facts.number} is a Zuckerman number."
-    )
+    return f"{shown} = {product}\n{facts.number} {divide} {product} = {facts.number // product}\n\n{facts.number} is a Zuckerman number."
 
 
 def _spy(facts: Facts) -> str:
@@ -171,11 +168,7 @@ def _explain_hoax(facts: Facts, ascii_math: bool) -> str:
     shown = f" {mark} ".join(str(factor) for factor in distinct)
     number_digits = " + ".join(str(digit) for digit in facts.digits)
     factor_digits = " + ".join(str(digit) for factor in distinct for digit in digits_of(factor))
-    return (
-        f"{facts.number} = {shown}\n{number_digits} = {sum(facts.digits)}\n"
-        f"{factor_digits} = {sum(digit_sum(factor) for factor in distinct)}\n\n"
-        f"{facts.number} is a hoax number."
-    )
+    return f"{facts.number} = {shown}\n{number_digits} = {sum(facts.digits)}\n{factor_digits} = {sum(digit_sum(factor) for factor in distinct)}\n\n{facts.number} is a hoax number."
 
 
 def _amicable(facts: Facts) -> str:
@@ -197,11 +190,7 @@ def _explain_amicable(facts: Facts, ascii_math: bool) -> str:
     partner = proper_divisor_sum(facts.number, facts.factors)
     status, factors = factorise(partner, search=facts.search)
     back = proper_divisor_sum(partner, factors) if status == "complete" else facts.number
-    return (
-        f"The proper divisors of {facts.number} sum to {partner}.\n"
-        f"The proper divisors of {partner} sum to {back}.\n\n"
-        f"{facts.number} and {partner} are amicable."
-    )
+    return f"The proper divisors of {facts.number} sum to {partner}.\nThe proper divisors of {partner} sum to {back}.\n\n{facts.number} and {partner} are amicable."
 
 
 def _vampire(facts: Facts) -> str:
@@ -273,10 +262,7 @@ def _explain_taxicab(facts: Facts, ascii_math: bool) -> str:
     _status, pairs = _taxicab_pairs(facts.number, search=False)
     lines = []
     for left, right in pairs:
-        lines.append(
-            f"{_power(left, 3, ascii_math=ascii_math)} + {_power(right, 3, ascii_math=ascii_math)}"
-            f" = {facts.number}"
-        )
+        lines.append(f"{_power(left, 3, ascii_math=ascii_math)} + {_power(right, 3, ascii_math=ascii_math)} = {facts.number}")
     return "\n".join(lines) + f"\n\n{facts.number} is a taxicab number."
 
 
@@ -449,10 +435,7 @@ def _sophie(facts: Facts) -> str:
 def _explain_sophie(facts: Facts, ascii_math: bool) -> str:
     safe = 2 * facts.number + 1
     shown = _times(2, facts.number, ascii_math=ascii_math)
-    return (
-        f"{facts.number} is prime, and {shown} + 1 = {safe} is prime.\n\n"
-        f"{facts.number} is a Sophie Germain prime."
-    )
+    return f"{facts.number} is prime, and {shown} + 1 = {safe} is prime.\n\n{facts.number} is a Sophie Germain prime."
 
 
 def _semiprime(facts: Facts) -> str:

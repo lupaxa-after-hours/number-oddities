@@ -12,8 +12,8 @@ pairs, and the rest of a thirty-eight property catalogue. Each match is
 explained with the arithmetic, not just a label.
 
 It runs entirely offline. No API keys, no network, and no runtime
-dependencies beyond Python 3.11+ and the standard library. It does not
-read or write your files.
+dependencies beyond the standard library. Requires Python 3.11 to 3.15.
+It does not read or write your files.
 
 The PyPI name is `lupaxa-number-oddities`. The import path is
 `lupaxa.number_oddities`. The console script is `number-oddities`.

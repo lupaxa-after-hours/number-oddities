@@ -44,10 +44,7 @@ def test_find_is_ordered_and_limited(capsys: pytest.CaptureFixture[str]) -> None
 
 def test_count_only_is_the_full_count(capsys: pytest.CaptureFixture[str]) -> None:
     """Count-only reports every match in the range, not a limited sample."""
-    assert (
-        main(["find", "square", "--start", "0", "--end", "10", "--count-only", "--format", "json"])
-        == 0
-    )
+    assert main(["find", "square", "--start", "0", "--end", "10", "--count-only", "--format", "json"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["count"] == 4
     assert "matches" not in payload

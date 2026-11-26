@@ -123,9 +123,7 @@ def _table(
     columns = len(rows[0])
     limits = wrap or [None] * columns
     placed = aligns or ["left"] * columns
-    wrapped = [
-        [_wrap(cell, limit) for cell, limit in zip(row, limits, strict=True)] for row in rows
-    ]
+    wrapped = [[_wrap(cell, limit) for cell, limit in zip(row, limits, strict=True)] for row in rows]
     widths = [1] * columns
     for row in wrapped:
         for index, lines in enumerate(row):
@@ -228,9 +226,7 @@ def _inspection_text(
             )
         )
     else:
-        blocks.append(
-            _table([["Matches", "none"]], ascii_rules=ascii_math, colour=colour, bold_keys=True)
-        )
+        blocks.append(_table([["Matches", "none"]], ascii_rules=ascii_math, colour=colour, bold_keys=True))
     if skipped:
         blocks.append(
             _table(
@@ -282,10 +278,7 @@ def render_properties(output_format: str, *, ascii_math: bool = False, colour: b
     from lupaxa.number_oddities.properties import REGISTRY
 
     if output_format == "json":
-        payload = [
-            {"id": item.ident, "name": item.title, "description": item.description}
-            for item in REGISTRY
-        ]
+        payload = [{"id": item.ident, "name": item.title, "description": item.description} for item in REGISTRY]
         return json.dumps(payload, indent=2)
     rows = [["Identifier", "Name", "Meaning"]]
     rows.extend([item.ident, item.title, item.description] for item in REGISTRY)
@@ -298,9 +291,7 @@ def render_properties(output_format: str, *, ascii_math: bool = False, colour: b
     )
 
 
-def render_explanation(
-    prop: Property, *, output_format: str, ascii_math: bool, colour: bool = False
-) -> str:
+def render_explanation(prop: Property, *, output_format: str, ascii_math: bool, colour: bool = False) -> str:
     """Render a property definition and one worked example."""
     example = prop.examples[0]
     _status, facts = evaluate(example, prop)
@@ -392,10 +383,7 @@ def render_compare(
     if output_format == "json":
         return json.dumps(
             {
-                "numbers": [
-                    {"number": number, "properties": props}
-                    for number, props in zip(numbers, rows, strict=True)
-                ],
+                "numbers": [{"number": number, "properties": props} for number, props in zip(numbers, rows, strict=True)],
                 "shared": shared,
             },
             indent=2,
@@ -406,9 +394,7 @@ def render_compare(
     present = set.union(*owned) if owned else set()
     shown = [item for item in REGISTRY if item.ident in present]
     header = ["Property", *[str(number) for number in numbers]]
-    body = [
-        [item.title, *["yes" if item.ident in have else "" for have in owned]] for item in shown
-    ]
+    body = [[item.title, *["yes" if item.ident in have else "" for have in owned]] for item in shown]
     shared_names = [item.title for item in shown if item.ident in set(shared)]
     grid = _table(
         [header, *body] if body else [header, ["none", *[""] * len(numbers)]],
