@@ -9,23 +9,8 @@ number counts repeats.
 
 from __future__ import annotations
 
-from lupaxa.number_oddities.analysis import (
-    Facts,
-    cube_root,
-    digit_sum,
-    digits_of,
-    factorise,
-    is_cube,
-    prime_status,
-    proper_divisor_sum,
-    square_root,
-)
-from lupaxa.number_oddities.limits import (
-    TAXICAB_INSPECT_ROOT,
-    TAXICAB_SEARCH_ROOT,
-    VAMPIRE_INSPECT_DIGITS,
-    VAMPIRE_SEARCH_DIGITS,
-)
+from lupaxa.number_oddities.analysis import Facts, cube_root, digit_sum, digits_of, factorise, is_cube, prime_status, proper_divisor_sum, square_root
+from lupaxa.number_oddities.limits import TAXICAB_INSPECT_ROOT, TAXICAB_SEARCH_ROOT, VAMPIRE_INSPECT_DIGITS, VAMPIRE_SEARCH_DIGITS
 
 _FACTORIALS = [1]
 for _digit in range(1, 10):

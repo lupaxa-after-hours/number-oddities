@@ -149,28 +149,14 @@ def _table(
     return "\n".join(drawn)
 
 
-def render_inspection(
-    facts: Facts,
-    matches: list[tuple[Property, Facts]],
-    skipped: list[str],
-    *,
-    output_format: str,
-    colour: bool,
-    ascii_math: bool,
-) -> str:
+def render_inspection(facts: Facts, matches: list[tuple[Property, Facts]], skipped: list[str], *, output_format: str, colour: bool, ascii_math: bool) -> str:
     """Render one inspection."""
     if output_format == "json":
         return json.dumps(_inspection_json(facts, matches, skipped, ascii_math=False), indent=2)
     return _inspection_text(facts, matches, skipped, colour=colour, ascii_math=ascii_math)
 
 
-def _inspection_json(
-    facts: Facts,
-    matches: list[tuple[Property, Facts]],
-    skipped: list[str],
-    *,
-    ascii_math: bool,
-) -> dict[str, object]:
+def _inspection_json(facts: Facts, matches: list[tuple[Property, Facts]], skipped: list[str], *, ascii_math: bool) -> dict[str, object]:
     return {
         "number": facts.number,
         "basic": _basic(facts),
@@ -186,14 +172,7 @@ def _inspection_json(
     }
 
 
-def _inspection_text(
-    facts: Facts,
-    matches: list[tuple[Property, Facts]],
-    skipped: list[str],
-    *,
-    colour: bool,
-    ascii_math: bool,
-) -> str:
+def _inspection_text(facts: Facts, matches: list[tuple[Property, Facts]], skipped: list[str], *, colour: bool, ascii_math: bool) -> str:
     basic = _basic(facts)
     blocks = [
         _table(
@@ -215,28 +194,11 @@ def _inspection_text(
         match_rows = [["Property", "Explanation"]]
         for prop, item in matches:
             match_rows.append([_title(prop), _compact(_explain(prop, item, ascii_math))])
-        blocks.append(
-            _table(
-                match_rows,
-                ascii_rules=ascii_math,
-                colour=colour,
-                header=True,
-                separate=True,
-                wrap=[None, 64],
-            )
-        )
+        blocks.append(_table(match_rows, ascii_rules=ascii_math, colour=colour, header=True, separate=True, wrap=[None, 64]))
     else:
         blocks.append(_table([["Matches", "none"]], ascii_rules=ascii_math, colour=colour, bold_keys=True))
     if skipped:
-        blocks.append(
-            _table(
-                [["Skipped", ", ".join(skipped)]],
-                ascii_rules=ascii_math,
-                colour=colour,
-                bold_keys=True,
-                wrap=[None, 64],
-            )
-        )
+        blocks.append(_table([["Skipped", ", ".join(skipped)]], ascii_rules=ascii_math, colour=colour, bold_keys=True, wrap=[None, 64]))
     return "\n\n".join(blocks)
 
 
@@ -282,13 +244,7 @@ def render_properties(output_format: str, *, ascii_math: bool = False, colour: b
         return json.dumps(payload, indent=2)
     rows = [["Identifier", "Name", "Meaning"]]
     rows.extend([item.ident, item.title, item.description] for item in REGISTRY)
-    return _table(
-        rows,
-        ascii_rules=ascii_math,
-        colour=colour,
-        header=True,
-        wrap=[None, None, 52],
-    )
+    return _table(rows, ascii_rules=ascii_math, colour=colour, header=True, wrap=[None, None, 52])
 
 
 def render_explanation(prop: Property, *, output_format: str, ascii_math: bool, colour: bool = False) -> str:
@@ -322,17 +278,7 @@ def render_explanation(prop: Property, *, output_format: str, ascii_math: bool, 
     )
 
 
-def render_find(
-    prop: Property,
-    start: int,
-    end: int,
-    matches: list[int],
-    *,
-    count_only: bool,
-    output_format: str,
-    ascii_math: bool = False,
-    colour: bool = False,
-) -> str:
+def render_find(prop: Property, start: int, end: int, matches: list[int], *, count_only: bool, output_format: str, ascii_math: bool = False, colour: bool = False) -> str:
     """Render a range search."""
     count = len(matches)
     if output_format == "json":
@@ -358,26 +304,11 @@ def render_find(
         )
     ]
     if not count_only and matches:
-        blocks.append(
-            _table(
-                [["Value"], *[[str(number)] for number in matches]],
-                ascii_rules=ascii_math,
-                colour=colour,
-                header=True,
-                aligns=["right"],
-            )
-        )
+        blocks.append(_table([["Value"], *[[str(number)] for number in matches]], ascii_rules=ascii_math, colour=colour, header=True, aligns=["right"]))
     return "\n\n".join(blocks)
 
 
-def render_compare(
-    numbers: list[int],
-    rows: list[list[str]],
-    *,
-    output_format: str,
-    ascii_math: bool = False,
-    colour: bool = False,
-) -> str:
+def render_compare(numbers: list[int], rows: list[list[str]], *, output_format: str, ascii_math: bool = False, colour: bool = False) -> str:
     """Render a comparison of two or more integers."""
     shared = sorted(set(rows[0]).intersection(*rows[1:])) if rows else []
     if output_format == "json":
@@ -396,31 +327,12 @@ def render_compare(
     header = ["Property", *[str(number) for number in numbers]]
     body = [[item.title, *["yes" if item.ident in have else "" for have in owned]] for item in shown]
     shared_names = [item.title for item in shown if item.ident in set(shared)]
-    grid = _table(
-        [header, *body] if body else [header, ["none", *[""] * len(numbers)]],
-        ascii_rules=ascii_math,
-        colour=colour,
-        header=True,
-        aligns=["left", *["center"] * len(numbers)],
-    )
-    shared_row = _table(
-        [["Shared", ", ".join(shared_names) if shared_names else "none"]],
-        ascii_rules=ascii_math,
-        colour=colour,
-        bold_keys=True,
-        wrap=[None, 64],
-    )
+    grid = _table([header, *body] if body else [header, ["none", *[""] * len(numbers)]], ascii_rules=ascii_math, colour=colour, header=True, aligns=["left", *["center"] * len(numbers)])
+    shared_row = _table([["Shared", ", ".join(shared_names) if shared_names else "none"]], ascii_rules=ascii_math, colour=colour, bold_keys=True, wrap=[None, 64])
     return f"{grid}\n\n{shared_row}"
 
 
-def render_random(
-    number: int | None,
-    prop: Property | None,
-    *,
-    output_format: str,
-    colour: bool,
-    ascii_math: bool,
-) -> str:
+def render_random(number: int | None, prop: Property | None, *, output_format: str, colour: bool, ascii_math: bool) -> str:
     """Render a discovered number, or the message that none exists."""
     if number is None or prop is None:
         message = "No qualifying number exists within the selected bounds."

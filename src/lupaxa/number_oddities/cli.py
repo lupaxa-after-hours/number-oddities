@@ -9,16 +9,7 @@ from random import Random
 
 from lupaxa.number_oddities.analysis import find_numbers, inspect_number
 from lupaxa.number_oddities.limits import MAX_RANGE
-from lupaxa.number_oddities.output import (
-    render_compare,
-    render_explanation,
-    render_find,
-    render_inspection,
-    render_properties,
-    render_random,
-    use_colour,
-    write_stdout,
-)
+from lupaxa.number_oddities.output import render_compare, render_explanation, render_find, render_inspection, render_properties, render_random, use_colour, write_stdout
 from lupaxa.number_oddities.properties import REGISTRY, Property, resolve
 from lupaxa.number_oddities.version import __version__
 
@@ -95,16 +86,7 @@ def _dispatch(args: list[str]) -> int:
         number = _integer(_one(payload, "a number is required"))
         facts, matches, skipped = inspect_number(number)
         _verbose(options, f"inspected {number}; matches={len(matches)}; skipped={len(skipped)}")
-        write_stdout(
-            render_inspection(
-                facts,
-                matches,
-                skipped,
-                output_format=output_format,
-                colour=colour,
-                ascii_math=ascii_math,
-            )
-        )
+        write_stdout(render_inspection(facts, matches, skipped, output_format=output_format, colour=colour, ascii_math=ascii_math))
         return 0
     if command == "find":
         return _find(payload, options, output_format, ascii_math, colour)
@@ -115,13 +97,7 @@ def _dispatch(args: list[str]) -> int:
     raise UsageError(_USAGE.strip())
 
 
-def _find(
-    payload: list[str],
-    options: dict[str, object],
-    output_format: str,
-    ascii_math: bool,
-    colour: bool,
-) -> int:
+def _find(payload: list[str], options: dict[str, object], output_format: str, ascii_math: bool, colour: bool) -> int:
     if not payload:
         raise UsageError("a property name is required")
     prop = _named(payload[0])
@@ -129,18 +105,7 @@ def _find(
     _check_range(start, end)
     found = find_numbers(prop, start, end, limit=None if count_only else limit)
     _verbose(options, f"searched {end - start + 1} integers from {start} to {end}")
-    write_stdout(
-        render_find(
-            prop,
-            start,
-            end,
-            found,
-            count_only=count_only,
-            output_format=output_format,
-            ascii_math=ascii_math,
-            colour=colour,
-        )
-    )
+    write_stdout(render_find(prop, start, end, found, count_only=count_only, output_format=output_format, ascii_math=ascii_math, colour=colour))
     return 0
 
 
@@ -156,25 +121,11 @@ def _compare(payload: list[str], output_format: str, ascii_math: bool, colour: b
     return 0
 
 
-def _random(
-    payload: list[str],
-    options: dict[str, object],
-    output_format: str,
-    ascii_math: bool,
-    colour: bool,
-) -> int:
+def _random(payload: list[str], options: dict[str, object], output_format: str, ascii_math: bool, colour: bool) -> int:
     start, end, prop, seed = _random_options(payload)
     _check_range(start, end)
     number, chosen = _discover(start, end, prop, seed)
-    write_stdout(
-        render_random(
-            number,
-            chosen,
-            output_format=output_format,
-            colour=colour,
-            ascii_math=ascii_math,
-        )
-    )
+    write_stdout(render_random(number, chosen, output_format=output_format, colour=colour, ascii_math=ascii_math))
     _verbose(options, f"random search from {start} to {end}")
     return 0
 
@@ -303,10 +254,7 @@ def _check_range(start: int, end: int) -> None:
         raise UsageError("the start must not exceed the end")
     width = end - start + 1
     if width > MAX_RANGE:
-        raise UsageError(
-            f"the range contains {width} integers; the maximum is {MAX_RANGE}",
-            code=3,
-        )
+        raise UsageError(f"the range contains {width} integers; the maximum is {MAX_RANGE}", code=3)
 
 
 def _format(value: str) -> str:
